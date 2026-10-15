@@ -48,9 +48,13 @@ hostname_short=$(hostname -s)
 
 if (( usage_pct >= threshold )); then
     msg="Disk alert on $hostname_short: $mount is at ${usage_pct}% (threshold ${threshold}%)"
-    curl -fsS -X POST -H 'Content-Type: application/json' \
+    if ! curl -fsS -X POST -H 'Content-Type: application/json' \
         -d "{\"text\": \"$msg\"}" \
-        "$ALERT_WEBHOOK" >/dev/null
+        "$ALERT_WEBHOOK" >/dev/null; then
+        echo "error: failed to post alert to webhook" >&2
+        echo "$msg" >&2
+        exit 1
+    fi
     echo "$msg"
     exit 1
 fi

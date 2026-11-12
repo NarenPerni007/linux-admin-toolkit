@@ -15,6 +15,19 @@ export ALERT_WEBHOOK="https://hooks.slack.com/services/xxx"
 ./scripts/disk-alert.sh --help
 ```
 
+### disk-usage-report.sh
+Read-only report for when a disk is full and it is not obvious why.
+Shows usage and inode usage, the largest directories and files, files
+that were deleted but are still held open by a process (the classic
+reason `df` and `du` disagree), and how much the systemd journal is
+using. It deletes and changes nothing, it just points at the cause.
+
+```bash
+./scripts/disk-usage-report.sh            # report on /
+./scripts/disk-usage-report.sh /var       # report on the /var filesystem
+./scripts/disk-usage-report.sh --top 20 /var
+```
+
 ### health-check.sh
 One-line cpu/mem/disk/load summary. Exits 1 when anything is over its
 warning threshold, so cron or a monitoring agent can catch it.
